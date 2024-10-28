@@ -1,0 +1,62 @@
+-- Criação da tabela Drivers
+CREATE TABLE Drivers (
+    DriverID INT PRIMARY KEY IDENTITY(1,1),  -- Chave primária com incremento automático
+    Nome VARCHAR(100) NOT NULL,
+    CNH VARCHAR(20) NOT NULL,
+    Endereco VARCHAR(200) NOT NULL,
+    Contato VARCHAR(50) NOT NULL
+);
+
+-- Criação da tabela Clients
+CREATE TABLE Clients (
+    ClientID INT PRIMARY KEY IDENTITY(1,1),  -- Chave primária com incremento automático
+    Nome VARCHAR(100) NOT NULL,
+    Empresa VARCHAR(100) NOT NULL,
+    Endereco VARCHAR(200) NOT NULL,
+    Contato VARCHAR(50) NOT NULL
+);
+
+-- Criação da tabela Orders
+CREATE TABLE Orders (
+    OrderID INT PRIMARY KEY IDENTITY(1,1),  -- Chave primária com incremento automático
+    ClientID INT NOT NULL,
+    DriverID INT NOT NULL,
+    DetalhesPedido TEXT NOT NULL,
+    DataEntrega DATE NOT NULL,
+    Status VARCHAR(50) NOT NULL,
+    FOREIGN KEY (ClientID) REFERENCES Clients(ClientID),
+    FOREIGN KEY (DriverID) REFERENCES Drivers(DriverID)
+);
+-- Inserindo dados na tabela Drivers
+INSERT INTO Drivers (Nome, CNH, Endereco, Contato)
+VALUES 
+    ('João Silva', '123456789', 'Rua A, 123', 'joao@exemplo.com'),
+    ('Maria Oliveira', '987654321', 'Rua B, 456', 'maria@exemplo.com');
+
+-- Inserindo dados na tabela Clients
+INSERT INTO Clients (Nome, Empresa, Endereco, Contato)
+VALUES 
+    ('Carlos Santos', 'Logística XYZ', 'Avenida C, 789', 'carlos@exemplo.com'),
+    ('Ana Souza', 'Transporte ABC', 'Avenida D, 101', 'ana@exemplo.com');
+
+-- Inserindo dados na tabela Orders
+INSERT INTO Orders (ClientID, DriverID, DetalhesPedido, DataEntrega, Status)
+VALUES 
+    (1, 1, 'Entrega de equipamentos', '2024-11-01', 'Pendente'),
+    (2, 2, 'Coleta de documentos', '2024-11-02', 'Entregue');
+-- Consultar todos os motoristas
+SELECT * FROM Drivers;
+
+-- Consultar todos os clientes
+SELECT * FROM Clients;
+
+-- Consultar todos os pedidos com detalhes dos clientes e motoristas
+SELECT o.OrderID, c.Nome AS Cliente, d.Nome AS Motorista, o.DetalhesPedido, o.DataEntrega, o.Status
+FROM Orders o
+JOIN Clients c ON o.ClientID = c.ClientID
+JOIN Drivers d ON o.DriverID = d.DriverID;
+UPDATE Drivers
+SET Nome = 'João da Silva'
+WHERE DriverID = 1;
+DELETE FROM Clients
+WHERE ClientID = 2;
